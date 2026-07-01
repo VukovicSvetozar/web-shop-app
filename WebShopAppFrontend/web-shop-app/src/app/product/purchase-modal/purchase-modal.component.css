@@ -1,0 +1,54 @@
+.kupovina-kontejner {
+    background-color: #ddf5f5;
+}
+
+.kupovina-kontejner h1 {
+    text-align: center;
+    font-weight: bold;
+    color: #205fa7;
+}
+
+.kupovina-radio-group {
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.kupovina-radio-button {
+    margin-left: 25px;
+}
+
+/* dovde */
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.avatar-slika {
+    margin-right: 10px;
+}
+
+.avatar-dugme {
+    margin-left: auto;
+}
+
+.linkovi-kontejner {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.stranica-naslov {
+    font-size: 24px;
+    color: #2196F3;
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+}

@@ -1,0 +1,47 @@
+<div class="slika-kontejner">
+    <h1 mat-dialog-title>Odaberi slike</h1>
+    <div mat-dialog-content>
+
+        <mat-form-field>
+            <div>
+                <mat-toolbar>
+                    <input matInput value='Odaberi slike' />
+
+                    <button mat-flat-button color="primary" [disabled]="!selektovaniPoster" (click)="dodajSlike()">
+                        Dodaj
+                    </button>
+                </mat-toolbar>
+
+                <input type="file" id="fileInput" name="fileInput" accept="image/*" multiple
+                    (change)="odaberiSlike($event)" />
+            </div>
+        </mat-form-field>
+
+        <mat-grid-list cols="3" gutterSize="10px">
+            <mat-grid-tile *ngFor="let pregled of preglediSlika;" [class.selektovano]="pregled === selektovaniPoster"
+                (click)="selektujPoster(pregled)">
+                <img [src]="pregled" class="pregledSlike">
+            </mat-grid-tile> </mat-grid-list>
+
+        <mat-card class="list-card">
+            <mat-card-header>
+                <mat-card-title>Lista slika</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-grid-list cols="2" rowHeight="60px">
+                    <div *ngFor="let image of imageInfos | async">
+                        <mat-grid-tile><a href="{{ image.url }}" class="text-inside-grid">{{ image.name
+                                }}</a></mat-grid-tile>
+                        <mat-grid-tile><img src="{{ image.url }}" alt="{{ image.name }}"
+                                class="image-inside-grid" /></mat-grid-tile>
+                    </div>
+                </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+    <div class="slika-dugmad" mat-dialog-actions>
+        <button mat-raised-button color="primary" [disabled]="!omoguciKraj" (click)="zavrsi()">Završi</button>
+    </div>
+
+</div>

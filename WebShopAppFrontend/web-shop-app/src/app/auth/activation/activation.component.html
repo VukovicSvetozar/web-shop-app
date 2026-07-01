@@ -1,0 +1,30 @@
+<div class="stranica-naslov">
+  Aktivacija naloga
+</div>
+
+<form [formGroup]="aktivacijaForm" (ngSubmit)="aktivacijaKorisnika()">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Pin</mat-label>
+    <input matInput formControlName="pin" placeholder="0000" pattern="^\d{4}$" required>
+    <mat-icon matSuffix>vpn_key</mat-icon>
+    <mat-error *ngIf="aktivacijaForm.get('pin')?.hasError('required') && aktivacijaForm.get('pin')?.touched">
+      Pin je obavezan!
+    </mat-error>
+    <mat-error *ngIf="aktivacijaForm.get('pin')?.hasError('pattern') && aktivacijaForm.get('pin')?.touched">
+      Potrebno je unijeti četverocifreni broj.
+    </mat-error>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" type="submit" [disabled]="aktivacijaForm.invalid">Aktivacija</button>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center center" class="linkovi-kontejner">
+    <a mat-raised-button color="accent" routerLink="../../home"><mat-icon>home</mat-icon>
+      <strong>Početna</strong></a>&nbsp;
+    <a mat-raised-button color="primary" routerLink="../../auth/login"><mat-icon>login</mat-icon>
+      <strong>Prijava</strong></a>
+  </div>
+
+</form>

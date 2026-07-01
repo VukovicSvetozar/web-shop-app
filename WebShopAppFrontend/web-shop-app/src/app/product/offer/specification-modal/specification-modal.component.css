@@ -1,0 +1,23 @@
+.specifikacija-kontejner h1 {
+  text-align: center;
+}
+
+.specifikacija-red {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.specifikacija-odabrani {
+  transform: scale(1.5);
+}
+
+.specifikacija-dugmad {
+  display: flex;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.mat-form-field {
+  margin-bottom: 26px;
+}

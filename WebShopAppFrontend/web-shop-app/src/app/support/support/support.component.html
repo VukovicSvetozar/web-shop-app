@@ -1,0 +1,44 @@
+<router-outlet></router-outlet>
+
+<div class="stranica-naslov">
+    Korisnička podrška
+</div>
+
+<form [formGroup]="podrskaForm" (ngSubmit)="posaljiPoruku()" class="podrska-form">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Naslov</mat-label>
+        <input matInput formControlName="naslov" placeholder="Naslov" required minlength="3" maxlength="30">
+        <mat-icon matSuffix>subject</mat-icon>
+        <mat-error *ngIf="podrskaForm.get('naslov')?.hasError('required') && podrskaForm.get('naslov')?.touched">
+            Naslov je obavezan!
+        </mat-error>
+        <mat-error *ngIf="podrskaForm.get('naslov')?.hasError('minlength') && podrskaForm.get('naslov')?.touched">
+            Naslov mora imati najmanje tri karaktera!
+        </mat-error>
+        <mat-error *ngIf="podrskaForm.get('naslov')?.hasError('maxlength') && podrskaForm.get('naslov')?.touched">
+            Naslov mo&#382;e imati najvi&#353;e 30 karaktera.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Poruka</mat-label>
+        <textarea matInput formControlName="tekst" placeholder="Unesite poruku..." required minlength="3"
+            maxlength="300"></textarea>
+        <mat-error *ngIf="podrskaForm.get('tekst')?.hasError('required') && podrskaForm.get('tekst')?.touched">
+            Tekst je obavezan!
+        </mat-error>
+        <mat-error *ngIf="podrskaForm.get('tekst')?.hasError('minlength') && podrskaForm.get('tekst')?.touched">
+            Tekst mora imati najmanje tri karaktera!
+        </mat-error>
+        <mat-error *ngIf="podrskaForm.get('tekst')?.hasError('maxlength') && podrskaForm.get('tekst')?.touched">
+            Tekst mo&#382;e imati najvi&#353;e 300 karaktera.
+        </mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <button mat-raised-button color="primary" type="submit" [disabled]="podrskaForm.invalid">Posalji
+            poruku</button>
+    </div>
+
+</form>

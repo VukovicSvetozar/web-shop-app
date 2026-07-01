@@ -1,0 +1,69 @@
+
+# ==========================================
+# 1. AdministratorskaAplikacija
+# ==========================================
+
+# Ignoriši kompajlirani kod i izvršne fajlove iz build foldera
+AdministratorskaAplikacija/build/
+
+# Ignoriši specifična podešavanja razvojnog okruženja (Eclipse/VS Code)
+AdministratorskaAplikacija/.settings/
+AdministratorskaAplikacija/.classpath
+AdministratorskaAplikacija/.project
+
+# ==========================================
+# 2. KorisnickaPodrska
+# ==========================================
+
+# Ignoriši kompajlirani kod i izvršne fajlove iz build foldera
+KorisnickaPodrska/build/
+
+# Ignoriši specifična podešavanja razvojnog okruženja (Eclipse/VS Code)
+KorisnickaPodrska/.settings/
+KorisnickaPodrska/.classpath
+KorisnickaPodrska/.project
+
+# ==========================================
+# 3. WebShopAppBackend
+# ==========================================
+
+# Ignoriši Eclipse workspace metapodatke iz glavnog foldera
+WebShopAppBackend/.metadata/
+
+# Ignoriši kompajlirane stvari (i sa Eclipse i sa Maven strane)
+WebShopAppBackend/webshop/bin/
+WebShopAppBackend/webshop/target/
+
+# Ignoriši logove aplikacije
+WebShopAppBackend/webshop/log/
+
+# Lokalno skladište za slike (odličan ulov, ovo ne želiš na Git-u)
+WebShopAppBackend/webshop/sacuvaneSlike/
+
+# Ignoriši konfiguraciju razvojnog okruženja unutar webshop-a
+WebShopAppBackend/webshop/.settings/
+WebShopAppBackend/webshop/.classpath
+WebShopAppBackend/webshop/.project
+WebShopAppBackend/webshop/.factorypath
+
+# ==========================================
+# 4. WebShopAppFrontend (Angular)
+# ==========================================
+# Glavni krivac za prostor (zato ga obavezno ignorišemo)
+WebShopAppFrontend/web-shop-app/node_modules/
+
+# Lokalni Angular keš za brže kompajliranje
+WebShopAppFrontend/web-shop-app/.angular/
+
+# Podešavanja editora za frontend dio
+WebShopAppFrontend/web-shop-app/.vscode/
+
+# Direktorijumi za produkcijski build (generišu se preko ng build)
+WebShopAppFrontend/web-shop-app/dist/
+WebShopAppFrontend/web-shop-app/tmp/
+
+# ==========================================
+# Opšti sistemski fajlovi
+# ==========================================
+.DS_Store
+Thumbs.db

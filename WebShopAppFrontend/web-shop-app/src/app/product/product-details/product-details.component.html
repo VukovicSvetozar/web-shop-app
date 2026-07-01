@@ -1,0 +1,118 @@
+<app-menu></app-menu>
+
+<div class="proizvod-kontejner">
+    <div class="proizvod-kolona-galerija  proizvod-kolona">
+        <div class="proizvod-info">
+            <div class="proizvod-info-naslov">{{odabraniProizvod?.kratakNaslov}}</div>
+            <div class="proizvod-info-podnaslov">{{odabraniProizvod?.nazivKategorije}}</div>
+        </div>
+        <div class="slika-kontejner">
+            <div>
+                <div (click)="prethodnaSlika()" class="slika-lijeva-strelica">❰</div>
+                <div (click)="sledecaSlika()" class="slika-desna-strelica">❱</div>
+            </div>
+            <div class="slika-slajd" [ngStyle]="{ 'background-image': vratiTrenutniSlajdUrl() }"></div>
+            <div class="slika-tacka-kontejner">
+                <div *ngFor="let slajd of slikeProizvodaUrl; let slajdIndeks = index" (click)="idiNaSlajd(slajdIndeks)">
+                    <span class="slika-tacka"
+                        [ngClass]="{'slika-tacka-aktivna': slajdIndeks === slikeTrenutniIndeks, 'slika-tacka-neaktivna': slajdIndeks !== slikeTrenutniIndeks}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="korisnik-info-naslov">Informacije o prodavcu</div>
+            <mat-card class="korisnik-info-kartica">
+                <mat-card-header>
+                    <div mat-card-avatar class="korisnik-info-slika"
+                        [style.background-image]="'url(' + avatarUrl + ')'">
+                    </div>
+                    <mat-card-title class="korisnik-info-ime">{{odabraniProizvod?.korisnickoIme}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="korisnik-info-podatak-kontejner">
+                        <mat-icon>location_on</mat-icon> <span class="korisnik-info-podatak"> {{odabraniProizvod?.grad}}
+                        </span>
+                    </div>
+                    <div class="korisnik-info-podatak-kontejner">
+                        <mat-icon>date_range</mat-icon> <span class="korisnik-info-podatak">
+                            {{odabraniProizvod?.datumPristupa}} </span>
+                    </div>
+                    <div class="korisnik-info-podatak-kontejner">
+                        <mat-icon>phone</mat-icon> <span class="korisnik-info-podatak">
+                            {{odabraniProizvod?.brojTelefona}} </span>
+                    </div>
+                    <div class="korisnik-info-podatak-kontejner">
+                        <mat-icon>mail</mat-icon> <span class="korisnik-info-podatak"> {{odabraniProizvod?.email}}
+                        </span>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="center center" class="kupovina-komentari-kontejner" *ngIf="prijavljen">
+            <div class="kupovina-dugme" *ngIf="dozvoljenaKupovina">
+                <button mat-raised-button type="button" color="primary"
+                    (click)="otvoriKupovinaDijalog()"><mat-icon>x</mat-icon><strong> Kupovina</strong></button>
+            </div>
+            <div class="brisanje-dugme" *ngIf="dozvoljenoBrisanje">
+                <button mat-raised-button type="button" color="primary"
+                    (click)="obrisiProizvod()"><mat-icon>x</mat-icon><strong> Brisanje</strong></button>
+            </div>
+            <div class="komentari-dugme" *ngIf="dozvoljenKomentar">
+                <button mat-raised-button type="button" color="primary"
+                    (click)="otvoriKomentariDijalog()"><mat-icon>x</mat-icon><strong> Komentari</strong></button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="proizvod-kolona-svojstva proizvod-kolona">
+        <div class="proizvod-cijena-kontejner">
+            <div class="proizvod-cijena-kartica">
+                <span class="proizvod-cijena-naziv">Cijena: </span>
+                <span class="proizvod-cijena-vrijednost">{{odabraniProizvod?.cijena | number:'1.2-2'}} </span>
+                <span class="proizvod-cijena-valuta">KM</span>
+            </div>
+            <div class="proizvod-stanje-kontejner">
+                <div *ngIf="odabraniProizvod?.polovan; else nov">
+                    <div class="proizvod-stanje-vrijednost">
+                        Polovno
+                    </div>
+                </div>
+                <ng-template #nov>
+                    <div class="proizvod-stanje-vrijednost">
+                        Novo
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div class="proizvod-osobina-kontejner">
+            <div>
+                <div class="proizvod-osobina-kartica">
+                    <h2 class="proizvod-osobina-tekst">Lokacija:</h2>
+                    <p class="proizvod-osobina-vrijednost">{{odabraniProizvod?.lokacija}}</p>
+                </div>
+                <div class="proizvod-osobina-kartica">
+                    <h2 class="proizvod-osobina-tekst">Vrijeme objave:</h2>
+                    <p class="proizvod-osobina-vrijednost">{{odabraniProizvod?.vrijemeObjave}}</p>
+                </div>
+            </div>
+            <div>
+                <div class="proizvod-osobina-kartica">
+                    <h2 class="proizvod-osobina-tekst">Detaljan opis:</h2>
+                    <p class="proizvod-osobina-vrijednost">{{odabraniProizvod?.detaljanOpis}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="proizvod-specificne-osobine-naslov">Specifične osobine</div>
+        <div class="proizvod-specificne-osobine-kontejner">
+            <div *ngFor="let osobina of specificneOsobine | keyvalue">
+                <div class="proizvod-specificne-osobine-kartica">
+                    <h2 class="proizvod-specificne-osobine-tekst">{{osobina.key}}:</h2>
+                    <p class="proizvod-specificne-osobine-vrijednost">{{osobina.value}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>

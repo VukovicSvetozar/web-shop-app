@@ -1,0 +1,190 @@
+<router-outlet></router-outlet>
+
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+
+    <mat-accordion class="filtriranje-kontejner">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Filtriranje
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <form [formGroup]="filtriranjeForm" (ngSubmit)="pretraga()">
+
+            <mat-form-field class="filtriranje-kategorija" appearance="outline">
+              <mat-label>Kategorija</mat-label>
+              <mat-select formControlName="kategorija">
+                <mat-option *ngFor="let kategorija of kategorije" [value]="kategorija.id">
+                  {{kategorija.naziv}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <section class="filtriranje-stanje" [formGroup]="filtriranjeForm">
+              <span class="filtriranje-stanje-element"><mat-checkbox formControlName="nov"
+                  color="primary">Nov</mat-checkbox></span>
+              <span class="filtriranje-stanje-element"><mat-checkbox formControlName="polovan"
+                  color="primary">Polovan</mat-checkbox></span>
+            </section>
+
+            <mat-form-field class="filtriranje-polje" appearance="outline">
+              <mat-label>Ime</mat-label>
+              <input matInput formControlName="korisnickoIme" placeholder="Vuk" pattern="^[a-zA-Z0-9_]*$" minlength="5"
+                maxlength="100">
+              <mat-icon matSuffix>account_circle</mat-icon>
+              <mat-error
+                *ngIf="filtriranjeForm.get('korisnickoIme')?.hasError('pattern') && filtriranjeForm.get('korisnickoIme')?.touched">
+                Ne mogu specijalni karakteri!
+              </mat-error>
+              <mat-error
+                *ngIf="filtriranjeForm.get('korisnickoIme')?.hasError('minlength') && filtriranjeForm.get('korisnickoIme')?.touched">
+                Minimalno 5 karaktera!
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="filtriranje-polje" appearance="outline">
+              <mat-label>Naslov</mat-label>
+              <input matInput formControlName="naslov" placeholder="Naslov" minlength="3" maxlength="30"
+                pattern="^[a-zA-Z0-9_]*$">
+              <mat-icon matSuffix>subject</mat-icon>
+              <mat-error
+                *ngIf="filtriranjeForm.get('naslov')?.hasError('pattern') && filtriranjeForm.get('naslov')?.touched">
+                Ne mogu specijalni karakteri!
+              </mat-error>
+              <mat-error
+                *ngIf="filtriranjeForm.get('naslov')?.hasError('minlength') && filtriranjeForm.get('naslov')?.touched">
+                Minimalno 3 karaktera!
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="filtriranje-polje" appearance="outline">
+              <mat-label>Lokacija</mat-label>
+              <input matInput formControlName="lokacija" placeholder="Banja Luka" minlength="2" maxlength="40">
+              <mat-icon matSuffix>location_on</mat-icon>
+              <mat-error
+                *ngIf="filtriranjeForm.get('lokacija')?.hasError('pattern') && filtriranjeForm.get('lokacija')?.touched">
+                Ne mogu specijalni karakteri!
+              </mat-error>
+              <mat-error
+                *ngIf="filtriranjeForm.get('lokacija')?.hasError('minlength') && filtriranjeForm.get('lokacija')?.touched">
+                Minimalno 2 karaktera!
+              </mat-error>
+            </mat-form-field>
+
+            <div class="filtriranje-cijena">
+              <mat-form-field appearance="outline" class="filtriranje-cijena-min">
+                <mat-label>Cijena od</mat-label>
+                <input matInput formControlName="minCijena" placeholder="0" pattern="^[0-9]+$">
+                <mat-error
+                  *ngIf="filtriranjeForm.get('minCijena')?.hasError('pattern') && filtriranjeForm.get('minCijena')?.touched">
+                  Broj!
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="filtriranje-cijena-max">
+                <mat-label>Cijena do</mat-label>
+                <input matInput formControlName="maxCijena" placeholder="100">
+                <mat-error
+                  *ngIf="filtriranjeForm.get('maxCijena')?.hasError('required') && filtriranjeForm.get('maxCijena')?.touched">
+                  Obavezno.
+                </mat-error>
+                <mat-error
+                  *ngIf="filtriranjeForm.get('maxCijena')?.hasError('pattern') && filtriranjeForm.get('maxCijena')?.touched">
+                  Broj!
+                </mat-error>
+                <mat-error *ngIf="filtriranjeForm.hasError('invalidRange')">
+                  Opseg!
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field class="filtriranje-vrijeme" appearance="outline">
+              <mat-label>Vremenski opseg</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="od" formControlName="datumOd">
+                <input matEndDate placeholder="do" formControlName="datumDo">
+              </mat-date-range-input>
+              <mat-hint class="filtriranje-vrijeme-hint">MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <div fxLayout="row" fxLayoutAlign="center center" class="dugme-kontejner">
+              <button mat-raised-button color="primary" type="reset" (click)="resetujFormu()">Resetuj</button>
+              <button mat-raised-button color="primary" type="submit"
+                [disabled]="filtriranjeForm.invalid">Pretraži</button>
+            </div>
+
+          </form>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="panel-prostor"></div>
+
+    <mat-accordion class="sortiranje-kontejner">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Sortiranje
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <form [formGroup]="sortiranjeForm" (ngSubmit)="sortiraj()">
+            <mat-radio-group class="sortiranje-radio-group" formControlName="sortiranjeOpcija">
+              <mat-radio-button class="sortiranje-radio-button" color="primary" value="cijena,r">
+                najjeftiniji
+              </mat-radio-button>
+              <mat-radio-button class="sortiranje-radio-button" color="primary" value="cijena,o">
+                najskuplji
+              </mat-radio-button>
+              <mat-radio-button class="sortiranje-radio-button" color="primary" value="vrijemeObjave,r">
+                najstariji
+              </mat-radio-button>
+              <mat-radio-button class="sortiranje-radio-button" color="primary" value="vrijemeObjave,o">
+                najnoviji
+              </mat-radio-button>
+            </mat-radio-group>
+
+            <div fxLayout="row" fxLayoutAlign="center center" class="dugme-kontejner">
+              <button mat-raised-button color="primary" type="submit"
+                [disabled]="sortiranjeForm.invalid">Sortiraj</button>
+            </div>
+          </form>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <div class="proizvod-kontejner">
+      <div class="proizvod-kartica" *ngFor="let kartica of listaKarticaProizvoda">
+        <div class="kartica-zaglavlje">
+          <div class="kartica-naslov">{{kartica.kratakNaslov}}</div>
+          <div class="kartica-podnaslov">{{kartica.nazivKategorije}}</div>
+        </div>
+        <div class="kartica-poster-kontejner">
+          <img class="kartica-poster" [src]="kartica.posterUrl" alt="Podrazumijevana slika">
+        </div>
+        <div class="proizvod-kartica-sadrzaj">
+          <p class="proizvod-kartica-sadrzaj-cijena">{{kartica.cijena | number:'1.2-2'}}<span
+              class="proizvod-kartica-sadrzaj-valuta">KM</span> </p>
+          <div class="proizvod-kartica-sadrzaj-stavka">
+            <a mat-raised-button color="primary" class="proizvod-kartica-sadrzaj-dugme"
+              [routerLink]="['/details', kartica.id, { dozvoljenKomentar: true, dozvoljenaKupovina: true, dozvoljenoBrisanje: false }]">Detalji</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-paginator [length]="ukupnoElemenata" [pageSize]="brojElemenata" [pageSizeOptions]="[3, 9, 18]"
+      (page)="promjenaStranice($event)"></mat-paginator>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

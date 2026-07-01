@@ -1,0 +1,19 @@
+.feature-kontejner h1 {
+  text-align: center;
+}
+
+.feature-red {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.feature-odabrani {
+  transform: scale(1.5);
+}
+
+.feature-dugmad {
+  display: flex;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}

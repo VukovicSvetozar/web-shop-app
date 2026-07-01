@@ -1,0 +1,65 @@
+<div class="kupovina-kontejner">
+    <h1 mat-dialog-title>Kupovina</h1>
+    <div mat-dialog-content>
+
+        <div>
+            <form [formGroup]="kupovinaForm" (ngSubmit)="kupi()">
+                <mat-label>Odaberi opciju:</mat-label>
+                <mat-radio-group class="kupovina-radio-group" formControlName="kupovinaOpcija"
+                    (change)="kupovinaOpcijaPromjena()">
+                    <mat-radio-button class="kupovina-radio-button" color="primary" value="karticno">
+                        kartično
+                    </mat-radio-button>
+                    <mat-radio-button class="kupovina-radio-button" color="primary" value="poPreuzimanju">
+                        po preuzimanju
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="outline">
+                    <mat-label>Broj kartice</mat-label>
+                    <input matInput formControlName="brojKartice" placeholder="00001" pattern="^[a-zA-Z0-9_]*$"
+                        minlength="5" maxlength="15">
+                    <mat-icon matSuffix>credit_card</mat-icon>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('brojKartice')?.hasError('pattern') && kupovinaForm.get('brojKartice')?.touched">
+                        Ne mogu specijalni karakteri.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('brojKartice')?.hasError('minlength') && kupovinaForm.get('brojKartice')?.touched">
+                        Broj kartice mora imati najmanje 5 karaktera.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('brojKartice')?.hasError('maxlength') && kupovinaForm.get('brojKartice')?.touched">
+                        Broj kartice mora imati najviše 15 karaktera.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>nazivKurirskeSluzbe</mat-label>
+                    <input matInput formControlName="nazivKurirskeSluzbe" placeholder="Abc" pattern="^[a-zA-Z0-9_]*$"
+                        minlength="5" maxlength="30">
+                    <mat-icon matSuffix>local_shipping</mat-icon>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('nazivKurirskeSluzbe')?.hasError('pattern') && kupovinaForm.get('nazivKurirskeSluzbe')?.touched">
+                        Ne mogu specijalni karakteri.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('nazivKurirskeSluzbe')?.hasError('minlength') && kupovinaForm.get('nazivKurirskeSluzbe')?.touched">
+                        Potrebno je najmanje 5 karaktera.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="kupovinaForm.get('nazivKurirskeSluzbe')?.hasError('maxlength') && kupovinaForm.get('nazivKurirskeSluzbe')?.touched">
+                        Dozvoljeno je najviše 30 karaktera.
+                    </mat-error>
+                </mat-form-field>
+
+                <div fxLayout="row" fxLayoutAlign="center center" class="linkovi-kontejner">
+                    <button mat-raised-button color="primary" type="submit"
+                        [disabled]="kupovinaForm.invalid">Kupi</button>
+                    <button mat-raised-button color="primary" (click)="zatvori()">Zatvori</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

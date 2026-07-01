@@ -1,0 +1,19 @@
+.kategorija-kontejner h1 {
+    text-align: center;
+}
+
+.kategorija-red {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.kategorija-odabrani {
+    transform: scale(1.5);
+}
+
+.kategorija-dugmad {
+    display: flex;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
