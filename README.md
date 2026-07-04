@@ -130,10 +130,7 @@ Build-ujte oba Maven projekta (`AdministratorskaAplikacija`, `KorisnickaPodrska`
 
 ## ⚠️ Napomena o bezbjednosti
 
-`application.properties` i `ConnectionPool.properties` u ovom repozitorijumu sadrže **stvarne, upisane kredencijale** (lozinku za MySQL, mail nalog i app-lozinku za slanje mail-a, tajni ključ za JWT). Pošto je repozitorijum javan, ove vrijednosti treba smatrati kompromitovanim:
-
-- promijenite lozinku MySQL `root` naloga i mail app-lozinku što prije,
-- generišite nov JWT tajni ključ,
-- ubuduće ovakve vrijednosti čuvajte kroz promjenljive okruženja (environment variables) ili lokalni fajl dodat u `.gitignore`, a u repozitorijumu ostavite samo primjer (npr. `application-example.properties`) sa praznim/izmišljenim vrijednostima.
+`application.properties` i `ConnectionPool.properties` u ovom repozitorijumu ne sadrže **stvarne, upisane kredencijale** (lozinku za MySQL, mail nalog i app-lozinku za slanje mail-a, tajni ključ za JWT). Pošto je repozitorijum javan, ove vrijednosti bi se u suprotnom smatrale kompromitovanim.
+Prije pokretanja aplikacije potrebno je unijeti vlastite vrijednosti u application.properties i ConnectionPool.properties ili koristiti environment varijable.
 
 ---
