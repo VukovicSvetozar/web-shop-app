@@ -1,139 +1,115 @@
-# ETFBL_IP Web Shop
+<br>
+<br>
+<div align="center">
+  <h1>Web Shop App</h1> 
+</div>
+<br>
+<br>
+<br>
 
-*Sistem sastavljen od četiri međusobno povezane aplikacije — web shop, administratorska aplikacija, aplikacija za korisničku podršku i zajednički REST backend — rađen kao projektni zadatak iz predmeta Internet programiranje.*
+<div style="page-break-before: always;"></div>
 
-Sistem simulira malu web prodavnicu (oglasnik) po uzoru na sajtove tipa OLX/Kupujem-prodajem: korisnici objavljuju ponude u proizvoljnim kategorijama (vozila, nekretnine, računari...), pretražuju i kupuju ponude drugih korisnika, dok administrator upravlja kategorijama i korisnicima, a operater korisničke podrške odgovara na poruke.
+**Web Shop App (ETFBL_IP)** je sistem sačinjen od četiri samostalne aplikacije koje simuliraju online oglasnik: web prodavnica za krajnje korisnike (Angular + Spring Boot), administratorska aplikacija za upravljanje kategorijama, korisnicima i statistikom (JSP, Model 2), i aplikacija za korisničku podršku (JSP). Projekat je realizovan za predmet *Internet programiranje*.
 
----
-
-## 🧩 Arhitektura sistema
-
-| Modul | Uloga | Tehnologije |
-|---|---|---|
-| **WebShopAppFrontend** | Javno dostupna prodavnica (kupci i prodavci) | Angular, Angular Material |
-| **WebShopAppBackend** | Jedinstveni REST API koji koriste sva tri klijenta ispod | Spring Boot, Spring Security (JWT), Spring Data JPA |
-| **AdministratorskaAplikacija** | Upravljanje kategorijama, specifikacijama i korisnicima | JSP (Model 2 / servlet + JSP) |
-| **KorisnickaPodrska** | Pregled i odgovaranje na poruke korisnika | JSP (Model 2 / servlet + JSP) |
-
-Sve četiri aplikacije dijele **istu MySQL bazu** i **isti Spring Boot backend** — administratorska aplikacija i aplikacija za podršku ne pristupaju bazi direktno za autentifikaciju, već i one šalju zahtjev ka backend-u (`/api/autentifikacija/token-administrator`) i dobijaju JWT token, isto kao Angular klijent.
+Sve tri prijave (web prodavnica, administratorska aplikacija, korisnička podrška) su potpuno nezavisne jedna od druge, iako dijele istu bazu podataka.
 
 ---
 
-## 🛍️ Web shop aplikacija (Angular + Spring Boot)
+## 🛠️ Ključne Funkcionalnosti
 
-- **Registracija i aktivacija:** korisnik unosi ime, prezime, grad, korisničko ime, mail, lozinku i (opciono) jedan od 37 ponuđenih avatara. Na mail se šalje nasumičan 4-cifreni PIN; nalog postaje aktivan tek unosom tačnog PIN-a na stranici za aktivaciju. Ako se neaktivan korisnik pokuša prijaviti, PIN se ponovo generiše i šalje.
-- **Prijava:** JWT autentifikacija (access + refresh token), token se čuva na klijentu i automatski dodaje na zaštićene pozive (`token.interceptor.ts`).
-- **Pregled i pretraga ponuda:** ponude su prikazane kao kartice (naslov, slika, cijena) uz straničenje (Angular Material paginator). Moguće je filtrirati po kategoriji, stanju (nov/polovan), cijeni, datumu objave, korisničkom imenu i lokaciji, kao i sortirati rezultate.
-- **Kategorije i specifični atributi:** svaka kategorija ima sopstveni skup dodatnih atributa (npr. za nekretnine: vrsta, sprat, broj kvadrata), koje definiše administrator; forma za objavljivanje ponude se dinamički prilagođava odabranoj kategoriji.
-- **Detalji ponude i pitanja:** klikom na karticu otvara se stranica sa svim informacijama, slikama i pitanjima/odgovorima koje vidi svako ko otvori ponudu (javna konverzacija, ne privatna poruka).
-- **Kupovina:** kupac bira način plaćanja — broj kartice ili naziv kurirske službe (plaćanje pouzećem) — nikad oba. Ne može se kupiti sopstvena ponuda, niti ponuda koja je već kupljena.
-- **Moje ponude:** svaki korisnik može objaviti novu ponudu (sa slikama, jedna oznaka kao naslovna/poster slika), pregledati svoje aktivne i završene ponude, obrisati svoju ponudu, kao i pregledati svoju istoriju kupovina.
-- **Profil:** korisnik može izmijeniti sve svoje podatke osim korisničkog imena.
-- **Korisnička podrška:** prijavljeni korisnik može poslati poruku podršci direktno iz aplikacije.
+### 1. Web prodavnica – oglasi, pretraga i kupovina
+* **Oglasi po kategorijama:** Svaki oglas ima naslov, opis, cijenu, stanje (novo/polovno), lokaciju, slike i kontakt prodavca, a svaka kategorija (vozila, nekretnine, računari...) nosi i sopstveni skup specifičnih atributa definisanih u administratorskoj aplikaciji.
+* **Pretraga, filtriranje i straničenje:** Oglasi se prikazuju kao kartice (naziv, slika, cijena) uz straničenje, filtriranje i pretragu po kategoriji i njenim specifičnim atributima; klikom na karticu otvara se stranica sa svim detaljima.
+* **Komentari na oglas:** Svaki oglas ima konverzaciju u vidu pitanja/komentara koju vide svi korisnici, dok neregistrovani posjetioci mogu samo pregledati ponude, bez postavljanja pitanja ili kupovine.
+* **Kupovina i istorija:** Kupovina se evidentira uz odabir načina plaćanja (kartica, pouzeće), a svaki korisnik ima pregled sopstvenih kupovina, kao i pregled i brisanje svojih aktivnih i završenih oglasa.
 
-## 🛠️ Administratorska aplikacija (JSP)
+### 2. Registracija, aktivacija naloga i sigurnost
+* **Registracija sa PIN aktivacijom:** Nakon registracije (ime, prezime, grad, korisničko ime, lozinka, avatar, mail) korisniku se šalje četvorocifreni PIN na mail; nalog postaje aktivan tek nakon unosa PIN-a, a ponovni pokušaj prijave na neaktivan nalog ponovo generiše i šalje PIN.
+* **JWT autentifikacija:** REST API je zaštićen putem JSON Web Tokena (Spring Security + `jjwt`), a prijavljeni korisnik može uređivati sve svoje podatke osim korisničkog imena.
+* **Kontakt podrške:** Prijavljeni korisnici mogu poslati poruku korisničkoj podršci direktno iz aplikacije.
 
-Zasebna prijava (nalog koji se ne kreira kroz aplikaciju, već direktno u bazi). Nakon prijave, dostupne su tri sekcije:
+### 3. Administratorska aplikacija (JSP, Model 2)
+* **Zaseban administratorski nalog:** Prijava koristi nalog kreiran direktno u bazi, nezavisan od naloga web prodavnice.
+* **Upravljanje kategorijama:** CRUD nad kategorijama i njihovim specifičnim atributima (npr. za nekretnine: tip, sprat, kvadratura).
+* **Upravljanje korisnicima:** CRUD nad korisničkim nalozima web prodavnice.
+* **Statistika:** Pregled logova Spring Boot backend aplikacije.
 
-- **Kategorije** — CRUD nad kategorijama ponuda i njihovim specifičnim atributima.
-- **Korisnici** — CRUD nad korisničkim nalozima web shop aplikacije.
-- **Statistika** — pregled logova backend aplikacije, sa filtriranjem po nivou logovanja (INFO/DEBUG/WARN/ERROR...) i vremenskom periodu.
-
-Implementirana je servlet-centričnim **Model 2** pristupom: jedan servlet (`AdministratorController`) prima sve akcije, priprema podatke u sesijskim beans-ovima i prosljeđuje ih odgovarajućoj JSP stranici.
-
-## 💬 Aplikacija za korisničku podršku (JSP)
-
-Takođe zasebna prijava, potpuno odvojena od administratorskog naloga (drugi korisnik, druga uloga — nalog se, kao i administratorski, kreira direktno u bazi). Operater vidi tabelu svih poruka korisnika; otvaranjem poruke njen status prelazi u "pročitana"; na poruku se odgovara slanjem mail-a korisniku; poruke se mogu pretraživati po sadržaju.
-
-## 🔐 Autentifikacija, autorizacija i uloge
-
-- Lozinke se heširaju **BCrypt** algoritmom (i za korisnike web shop-a i za administratorske/podrška naloge).
-- Pristup je zaštićen **JWT** tokenima (`io.jsonwebtoken`), sa filterom koji presreće svaki zahtjev (`JwtAuthenticationFilter`) i bez server-side sesije (stateless).
-- Modelovano je pet uloga: `GOST`, `REGISTROVANI` (registrovan, ali nije aktivirao nalog), `VERIFIKOVANI` (aktivan korisnik web shop-a), `ADMINISTRATOR` i `PODRSKA`.
-- Administratorski i podrška nalog čuvaju se u istoj tabeli (`administrator`), razlikuju se preko atributa uloge — u skladu sa zahtjevom da se ti nalozi ne otvaraju kroz samu aplikaciju, već unosom direktno u bazu.
-
-## 🗄️ Model podataka (pregled entiteta)
-
-| Entitet | Opis |
-|---|---|
-| `Korisnik` | Nalog korisnika web shop-a (lični podaci, avatar, lozinka, PIN, uloga) |
-| `Administrator` | Administratorski / podrška nalog (razlikovan poljem uloge) |
-| `Kategorija` | Kategorija ponuda (npr. nekretnine, vozila...) |
-| `Specifikacija` | Atribut specifičan za kategoriju (npr. "sprat" za nekretnine) |
-| `Proizvod` | Ponuda — naslov, opis, cijena, stanje, lokacija, status (`AKTIVAN`/`ZAVRSEN`), kategorija, vlasnik |
-| `ProizvodSpecifikacija` | Vrijednost konkretnog atributa za konkretnu ponudu |
-| `ProizvodKomentar` | Pitanje/komentar na ponudi, vezan za korisnika i ponudu |
-| `Kupovina` | Zabilježena kupovina — kupac, prodavac, ponuda, način plaćanja |
-| `Placanje` | Podaci o plaćanju (broj kartice ili naziv kurirske službe) |
-| `PorukaKorisnickePodrske` | Poruka poslata podršci, sa statusom pročitanosti i eventualnim odgovorom |
+### 4. Aplikacija za korisničku podršku (JSP)
+* **Zaseban operaterski nalog:** Prijava potpuno odvojena od naloga web prodavnice i administratorske aplikacije.
+* **Pregled poruka:** Operater vidi sve pristigle poruke, s tim da se otvaranjem poruke njen status mijenja u pročitanu; poruke se mogu pretraživati po sadržaju.
+* **Odgovor mail-om:** Na poruku korisnika operater odgovara slanjem e-mail poruke.
 
 ---
 
-## 💻 Tehnologije po modulu
+## 🏗️ Arhitektura
 
-| Modul | Ključne tehnologije |
-|---|---|
-| Frontend | Angular, Angular Material, RxJS, TypeScript |
-| Backend | Spring Boot 3, Spring Data JPA (Hibernate), Spring Security, JWT (`jjwt`), Spring Mail, ModelMapper, MySQL |
-| Administratorska aplikacija | Jakarta Servlet/JSP (Model 2), Gson, BCrypt |
-| Korisnička podrška | Jakarta Servlet/JSP (Model 2) |
-| Baza podataka | MySQL (šema se generiše automatski preko Hibernate `ddl-auto=update`, bez procedura, funkcija i okidača) |
+* **Četiri nezavisne aplikacije, jedna baza:** Web prodavnica (Angular + Spring Boot REST API), administratorska aplikacija (JSP) i aplikacija za korisničku podršku (JSP) dijele istu MySQL bazu `webshopapp`, ali svaka ima sopstveni, potpuno odvojen sistem naloga.
+* **DTO sloj (Zahtjev/Odgovor):** Spring Boot API komunicira isključivo preko posebnih zahtjev/odgovor DTO klasa (npr. `ProizvodKarticaOdgovor` za listu oglasa, `ProizvodDetaljiOdgovor` za stranicu detalja), uz `ModelMapper` za konverziju iz JPA entiteta.
+* **Dinamični atributi po kategoriji:** Specifični atributi svake kategorije modelovani su kroz `Specifikacija` i `ProizvodSpecifikacija` (sa složenim ključem), umjesto fiksnih kolona po kategoriji proizvoda.
+* **Bez logike u bazi:** U skladu sa zahtjevom zadatka, baza ne sadrži uskladištene procedure ni okidače – sva poslovna logika i validacija nalaze se u aplikativnom sloju (Spring Boot servisi i klijentska/serverska validacija).
+* **JSP Model 2 vs. jednostavniji JSP:** Administratorska aplikacija je rađena po Model 2 obrascu (servleti kao kontroleri, JSP samo za prikaz), dok je aplikacija za korisničku podršku jednostavnija JSP aplikacija – razlika koju nalaže sama specifikacija zadatka.
 
 ---
 
-## 🚀 Kako pokrenuti projekat lokalno
+## 📁 Struktura Projekta
 
-### Preduslovi
+```text
+WebShopAppBackend/webshop/            # Spring Boot REST API
+└── src/main/java/org/vs/
+    ├── controller/                    # REST kontroleri
+    ├── service/                        # Poslovna logika (mail, upload slika...)
+    ├── repository/                      # Spring Data JPA repozitorijumi
+    ├── entity/                           # JPA entiteti
+    ├── dto/                               # Zahtjev/Odgovor DTO klase
+    ├── security/                           # JWT autentifikacija, Spring Security konfiguracija
+    └── exception/                           # Obrada grešaka
 
-- Java 17 i Maven (ili korišćenje priloženog `mvnw`)
-- Node.js i Angular CLI
-- MySQL server
-- Servletski kontejner (npr. Apache Tomcat) za dvije JSP aplikacije
+WebShopAppFrontend/web-shop-app/      # Angular SPA
+└── src/app/
+    ├── auth/                          # Prijava, registracija, aktivacija naloga
+    ├── product/                        # Pregled, pretraga i kreiranje oglasa
+    ├── support/                          # Forma za kontaktiranje podrške
+    ├── app-layout/                        # Zajednički izgled stranica
+    └── services/                           # HTTP komunikacija sa backendom
 
-### 1. Baza podataka
+AdministratorskaAplikacija/           # JSP (Model 2) administratorski panel
+└── src/main/java/
+    ├── controller/                    # Servleti (kategorije, korisnici, statistika)
+    ├── dao/                            # Pristup bazi
+    └── beans/                          # Modeli podataka
 
-Kreirajte praznu MySQL bazu (npr. `webshopapp`). Šema (tabele) će se automatski generisati pri prvom pokretanju backend-a.
+KorisnickaPodrska/                    # JSP aplikacija za korisničku podršku
+└── src/main/java/
+    ├── service/                       # Prijava operatera, pristup bazi
+    └── beans/                         # Modeli podataka
 
-### 2. Backend (WebShopAppBackend/webshop)
-
-U `src/main/resources/application.properties` podesite **svoje** vrijednosti (ne koristite vrijednosti iz repozitorijuma — vidi napomenu ispod):
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/webshopapp
-spring.datasource.username=<vaš_korisnik>
-spring.datasource.password=<vaša_lozinka>
-
-spring.mail.username=<vaš_mail>
-spring.mail.password=<vaša_app_lozinka_za_mail>
-
-application.security.jwt.secret-key=<vaš_sopstveni_tajni_ključ>
+Tekst projekta/Zadatak.pdf            # Specifikacija zadatka
 ```
 
-Pokrenite: `./mvnw spring-boot:run` (backend se podiže na portu `8888`).
+---
 
-Nakon prvog pokretanja, ručno unesite red(ove) u tabelu `administrator` za administratorski i za podrška nalog (uz BCrypt heš lozinke) — kroz aplikaciju se ovi nalozi ne kreiraju, u skladu sa zadatkom.
+## 💻 Tehnologije i Alati
 
-### 3. Frontend (WebShopAppFrontend/web-shop-app)
-
-```bash
-npm install
-ng serve
-```
-
-Aplikacija je dostupna na `http://localhost:4200` i poziva backend na `http://localhost:8888`.
-
-### 4. Administratorska aplikacija i aplikacija za podršku
-
-Build-ujte oba Maven projekta (`AdministratorskaAplikacija`, `KorisnickaPodrska`) u `.war` i deploy-ujte ih na Tomcat (podrazumijevano na `http://localhost:8080/...`). Obje aplikacije komuniciraju sa istim backend-om na portu `8888`.
+* **Backend:** Spring Boot (Java), Spring Data JPA/Hibernate, Spring Security + JWT (`jjwt`), ModelMapper, Spring Mail, MySQL
+* **Frontend:** Angular 16, Angular Material + CDK
+* **Administratorska aplikacija i podrška:** JSP, Servleti (Model 2 za administratorsku aplikaciju), sopstveni connection pool
+* **Baza podataka:** MySQL – bez uskladištenih procedura ili okidača (ograničenje zadatka); sva logika je u aplikativnom sloju
+* **Komunikacija:** RESTful API između Angular frontenda i Spring Boot backenda
 
 ---
 
-## ⚠️ Napomena o bezbjednosti
+## 🚀 Kako Pokrenuti Projekat Lokalno
 
-`application.properties` i `ConnectionPool.properties` u ovom repozitorijumu sadrže **stvarne, upisane kredencijale** (lozinku za MySQL, mail nalog i app-lozinku za slanje mail-a, tajni ključ za JWT). Pošto je repozitorijum javan, ove vrijednosti treba smatrati kompromitovanim:
+Sve tri Java komponente dijele istu MySQL bazu (`webshopapp`); Spring Boot je podešen da šemu kreira/ažurira automatski pri prvom pokretanju (`spring.jpa.hibernate.ddl-auto=update`).
 
-- promijenite lozinku MySQL `root` naloga i mail app-lozinku što prije,
-- generišite nov JWT tajni ključ,
-- ubuduće ovakve vrijednosti čuvajte kroz promjenljive okruženja (environment variables) ili lokalni fajl dodat u `.gitignore`, a u repozitorijumu ostavite samo primjer (npr. `application-example.properties`) sa praznim/izmišljenim vrijednostima.
+### Backend (`WebShopAppBackend/webshop`)
+1. U `src/main/resources/application.properties` podesiti pristup bazi, nalog za slanje mail-a (PIN aktivacija) i JWT tajni ključ.
+2. Pokrenuti: `./mvnw spring-boot:run` (podrazumijevano na portu 8888).
 
----
+### Frontend (`WebShopAppFrontend/web-shop-app`)
+1. `npm install`
+2. `ng serve` (ili `npm start`)
+
+### Administratorska aplikacija / Korisnička podrška
+1. Podesiti `ConnectionPool.properties` u odgovarajućem `oodb` paketu svake aplikacije.
+2. Build-ovati kao WAR i postaviti na servletski kontejner (npr. Apache Tomcat).
